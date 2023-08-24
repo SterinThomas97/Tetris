@@ -24,9 +24,7 @@ clock.tick(200)
 def getRandomPosition():
     curr_x_position = random.randint(0, 360)
     curr_x_position = curr_x_position - (curr_x_position % 40)
-    curr_y_position = random.randint(0, 560)
-    curr_y_position = curr_y_position - (curr_y_position % 40)
-    return (curr_x_position, curr_y_position)
+    return (curr_x_position, 0)
 
 
 running = True
@@ -38,14 +36,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        pygame.time.wait(1000)
+        pygame.time.wait(500)
         keys = pygame.key.get_pressed()
 
         if (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position < 560:
             curr_y_position = curr_y_position + height
             screen.fill((0, 0, 0))
         elif (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position >= 560:
-            (curr_x_position, curr_y_position) = getRandomPosition();
+            (curr_x_position, curr_y_position) = getRandomPosition()
             pygame.draw.rect(screen, (255, 0, 0), (curr_x_position, curr_y_position, width, height))
 
         else:
