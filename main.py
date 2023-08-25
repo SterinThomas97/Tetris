@@ -7,7 +7,7 @@ width = 40
 height = 40
 rows = 10
 columns = 15
-FPS = 60
+FPS = 2
 
 pygame.init()
 screen = pygame.display.set_mode((rows * width, columns * height))
@@ -36,35 +36,32 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        pygame.time.wait(500)
         keys = pygame.key.get_pressed()
-
-        if (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position < 560:
-            curr_y_position = curr_y_position + height
-            screen.fill((0, 0, 0))
-        elif (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position >= 560:
-            (curr_x_position, curr_y_position) = getRandomPosition()
-            pygame.draw.rect(screen, (255, 0, 0), (curr_x_position, curr_y_position, width, height))
-
-        else:
+        if event.type == pygame.KEYDOWN:
 
             if keys[pygame.K_LEFT] and curr_x_position > 0:
-                curr_x_position = curr_x_position - (2 * width)
-            elif keys[pygame.K_RIGHT] and curr_x_position < 360:
-                curr_x_position = curr_x_position + (2 * width)
-            elif keys[pygame.K_UP] and curr_y_position > 0:
-                curr_y_position = curr_y_position - (2 * height)
-            elif keys[pygame.K_DOWN] and curr_y_position < 560:
-                curr_y_position = curr_y_position + (2 * height)
+                curr_x_position = curr_x_position - width
+            if keys[pygame.K_RIGHT] and curr_x_position < 360:
+                curr_x_position = curr_x_position + width
+            if keys[pygame.K_UP] and curr_y_position > 0:
+                curr_y_position = curr_y_position - height
+            if keys[pygame.K_DOWN] and curr_y_position < 560:
+                curr_y_position = curr_y_position + height
             screen.fill((0, 0, 0))
 
-
-        rec = [pygame.Rect(x * width, y * height, width, height) for x in range(rows) for y in range(columns)]
-        [pygame.draw.rect(screen, (40, 40, 40), rectangle, 2) for rectangle in rec]
-
+    if (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position <= 560:
+        curr_y_position = curr_y_position + height
+        screen.fill((0, 0, 0))
+    if (not keys[pygame.K_LEFT]) and (not keys[pygame.K_RIGHT]) and (not keys[pygame.K_UP]) and (not keys[pygame.K_DOWN]) and curr_y_position > 560:
+        (curr_x_position, curr_y_position) = getRandomPosition()
         pygame.draw.rect(screen, (255, 0, 0), (curr_x_position, curr_y_position, width, height))
 
-        pygame.display.update()
-        clock.tick(FPS)
+    rec = [pygame.Rect(x * width, y * height, width, height) for x in range(rows) for y in range(columns)]
+    [pygame.draw.rect(screen, (40, 40, 40), rectangle, 2) for rectangle in rec]
+
+    pygame.draw.rect(screen, (255, 0, 0), (curr_x_position, curr_y_position, width, height))
+
+    pygame.display.flip()
+    clock.tick(FPS)
 
 
