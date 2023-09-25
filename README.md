@@ -78,7 +78,7 @@ Tetris is a popular puzzle game where the player's objective is to manipulate fa
 
 1. Make sure you have Python and Pygame installed on your system.
 2. Clone this repository to your local machine.
-3. Run the `main.py` file to start the game.
+3. Run the `game1.py` file to start the game.
 
 ## Controls
 
@@ -103,7 +103,7 @@ The objective of the game is to complete as many lines as possible by arranging 
 
 ## Contributors
 
-- [Sterin Thomas](https://github.com/yourusername)
+- [Sterin Thomas](https://github.com/SterinThomas97/Tetris)
 - Bhavya Thalath
 - Irene Priya Jose
 - Aparna Jyothi
