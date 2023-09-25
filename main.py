@@ -1,3 +1,5 @@
+import subprocess
+
 import pygame
 import sys
 import random
@@ -6,12 +8,15 @@ import random
 pygame.init()
 
 # Constants
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 800
 GRID_SIZE = 30
 GRID_WIDTH, GRID_HEIGHT = WIDTH // GRID_SIZE, HEIGHT // GRID_SIZE
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 SHAPE_COLORS = [(0, 0, 0), (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255), (128, 128, 128)]
+
+# Initialize grid
+grid = [[0] * GRID_WIDTH for _ in range(GRID_HEIGHT)]
 
 # Tetrimino shapes
 SHAPES = [
@@ -23,7 +28,6 @@ SHAPES = [
     [[1, 1, 1], [1, 0, 0]],
     [[1, 1, 1], [0, 0, 1]]
 ]
-# ...
 
 # Create the game window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -39,53 +43,14 @@ current_shape_y = 0
 score = 0
 
 
-# Functions
-def draw_grid():
-    for y in range(GRID_HEIGHT):
-        for x in range(GRID_WIDTH):
-            pygame.draw.rect(screen, SHAPE_COLORS[grid[y][x]], pygame.Rect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE), 0)
-
-def new_shape():
-    shape = random.choice(SHAPES)
-    return shape
-
-def draw_shape(shape, x, y):
-    for row in range(len(shape)):
-        for col in range(len(shape[row])):
-            if shape[row][col] != 0:
-                pygame.draw.rect(screen, SHAPE_COLORS[shape[row][col]], pygame.Rect((x + col) * GRID_SIZE, (y + row) * GRID_SIZE, GRID_SIZE, GRID_SIZE), 0)
-
-def collision(x, y, shape):
-    for row in range(len(shape)):
-        for col in range(len(shape[row])):
-            if shape[row][col] != 0:
-                if y + row >= GRID_HEIGHT or x + col < 0 or x + col >= GRID_WIDTH or grid[y + row][x + col] != 0:
-                    return True
-    return False
-
-def place_shape(x, y, shape):
-    for row in range(len(shape)):
-        for col in range(len(shape[row])):
-            if shape[row][col] != 0:
-                grid[y + row][x + col] = shape[row][col]
-
-def clear_lines():
-    global score
-    lines_cleared = 0
-    for row in range(GRID_HEIGHT):
-        if all(grid[row]):
-            grid.pop(row)
-            grid.insert(0, [0] * GRID_WIDTH)
-            lines_cleared += 1
-    score += lines_cleared * 100
-
-# Game states
+## Game states
 STATE_STARTUP = "startup"
 STATE_GAME = "game"
 STATE_TOPSCORE = "topscore"
 STATE_CONFIGURE = "configure"
 current_state = STATE_STARTUP
 
+#Function to draw the startup page
 def draw_startup_page():
     screen.fill(BLACK)
 
@@ -114,9 +79,12 @@ def draw_startup_page():
 
     # Draw buttons
     buttons = [
+        (play_button, "Play"),
         (exit_button, "Exit"),
         (score_button, "Top Scores"),
         (configure_button, "Configure")
+
+
     ]
     for button, text in buttons:
         pygame.draw.rect(screen, WHITE, button)
@@ -125,6 +93,7 @@ def draw_startup_page():
         screen.blit(button_text, button_rect)
 
 
+#Function to draw the topscore page
 def draw_topscore_page():
     screen.fill(BLACK)
 
@@ -165,6 +134,7 @@ def draw_topscore_page():
     screen.blit(close_text, close_rect)
 
 
+#Function to draw the configure page
 def draw_configure_page():
     screen.fill(BLACK)
 
@@ -204,14 +174,19 @@ def draw_configure_page():
 
 
 
+# Define button dimensions
 button_width = 200
 button_height = 50
 button_y = 400
 
+# Define buttons
 exit_button = pygame.Rect((WIDTH - button_width) // 2, button_y, button_width, button_height)
 score_button = pygame.Rect((WIDTH - button_width) // 2, button_y + 70, button_width, button_height)
 configure_button = pygame.Rect((WIDTH - button_width) // 2, button_y + 140, button_width, button_height)
 close_button = pygame.Rect((WIDTH - button_width) // 2, button_y + 70, button_width, button_height)
+play_button = pygame.Rect((WIDTH - button_width) // 2, button_y + 210, button_width, button_height)  # Define the Play button
+
+
 
 
 
@@ -236,6 +211,9 @@ while True:
                     current_state = STATE_TOPSCORE
                 elif configure_button.collidepoint(mouse_pos):
                     current_state = STATE_CONFIGURE
+                elif play_button.collidepoint(mouse_pos):
+                    # Execute the Tetris game Python file
+                    subprocess.run(["python", "game1.py"])  # Update with your Tetris game file name
 
             elif current_state == STATE_TOPSCORE:
                 if close_button.collidepoint(mouse_pos):
